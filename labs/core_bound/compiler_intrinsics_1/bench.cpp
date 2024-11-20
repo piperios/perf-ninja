@@ -3,17 +3,19 @@
 #include "solution.h"
 #include <memory>
 
-static void bench_partial_sum(benchmark::State &state) {
-  InputVector inA;
-  init(inA);
+static void bench_partial_sum(benchmark::State& state)
+{
+    input_buffer_t in_a;
+    init(in_a);
 
-  OutputVector outB;
-  zero(outB, (int)inA.size());
+    output_buffer_t outB;
+    zero(outB, (int)in_a.size());
 
-  for (auto _ : state) {
-    imageSmoothing(inA, radius, outB);
-    benchmark::DoNotOptimize(outB);
-  }
+    for (auto _ : state)
+    {
+        smoothen_image(in_a, radius_v, outB);
+        benchmark::DoNotOptimize(outB);
+    }
 }
 
 // Register the function as a benchmark

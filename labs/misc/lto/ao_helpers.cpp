@@ -5,40 +5,39 @@ double vdot(vec v0, vec v1)
     return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
 }
 
-void vcross(vec *c, vec v0, vec v1)
+void vcross(vec* c, vec v0, vec v1)
 {
-    
+
     c->x = v0.y * v1.z - v0.z * v1.y;
     c->y = v0.z * v1.x - v0.x * v1.z;
     c->z = v0.x * v1.y - v0.y * v1.x;
 }
 
-void vnormalize(vec *c)
+void vnormalize(vec* c)
 {
     double length = sqrt(vdot((*c), (*c)));
 
-    if (fabs(length) > 1.0e-17) {
+    if (fabs(length) > 1.0e-17)
+    {
         c->x /= length;
         c->y /= length;
         c->z /= length;
     }
 }
 
-unsigned char
-clamp(double f)
+unsigned char clamp(double f)
 {
-  int i = (int)(f * 255.5);
+    int i = (int)(f * 255.5);
 
-  if (i < 0) i = 0;
-  if (i > 255) i = 255;
+    if (i < 0) i = 0;
+    if (i > 255) i = 255;
 
-  return (unsigned char)i;
+    return (unsigned char)i;
 }
 
-void
-saveppm(const char *fname, int w, int h, unsigned char *img)
+void saveppm(char const* fname, int w, int h, unsigned char* img)
 {
-    FILE *fp;
+    FILE* fp;
 
     fp = fopen(fname, "wb");
     assert(fp);

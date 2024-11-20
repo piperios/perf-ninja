@@ -10,7 +10,6 @@ constexpr std::size_t N = 64 * 1024;
 using S = std::pair<std::uint32_t, std::uint32_t>;
 
 // Select items which have S.first in range [lower..upper]
-std::size_t select(std::array<S, N> &output, const std::array<S, N> &input,
-                   const std::uint32_t lower, const std::uint32_t upper);
+std::size_t select(std::array<S, N>& output, std::array<S, N> const& input, std::uint32_t const lower, std::uint32_t const upper);
 
-void init(std::array<S, N> &arr);
+void init(std::array<S, N>& arr);

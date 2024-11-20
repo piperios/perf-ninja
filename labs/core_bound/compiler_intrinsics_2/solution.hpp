@@ -1,3 +1,3 @@
 #include <string>
 
-unsigned solution(const std::string &inputContents);
+unsigned solution(std::string const& inputContents);

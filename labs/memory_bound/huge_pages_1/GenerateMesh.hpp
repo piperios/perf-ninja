@@ -22,6 +22,5 @@
 // seed - seed for RNG
 //
 // returns topology (see solution.hpp)
-auto generateMesh(unsigned n_nodes_x, unsigned n_nodes_y, double *x, double *y,
-                  unsigned seed = std::random_device{}())
+auto generateMesh(unsigned n_nodes_x, unsigned n_nodes_y, double* x, double* y, unsigned seed = std::random_device{}())
     -> std::vector<std::array<unsigned, 2>>;

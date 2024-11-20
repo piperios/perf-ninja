@@ -4,16 +4,18 @@
 
 #include <iostream>
 
-constexpr const char *file_names[] = {small_data, medium_data, large_data};
+constexpr char const* file_names[] = {small_data, medium_data, large_data};
 
-static void bench1(benchmark::State &state) {
-  const char *file = file_names[state.range(0)];
+static void bench1(benchmark::State& state)
+{
+    char const* file = file_names[state.range(0)];
 
-  // Run the benchmark
-  for (auto _ : state) {
-    auto output = solution(file);
-    benchmark::DoNotOptimize(output);
-  }
+    // Run the benchmark
+    for (auto _ : state)
+    {
+        auto output = solution(file);
+        benchmark::DoNotOptimize(output);
+    }
 }
 
 BENCHMARK(bench1)->Unit(benchmark::kMicrosecond)->Arg(0)->Name("Small file");

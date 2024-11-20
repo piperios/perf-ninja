@@ -12,6 +12,4 @@
 //       the stiffness matrix. It has a length of 2 * n_nodes (2 DOFs per node)
 // rhs - right-hand side - this is the vector where we want to write the result
 //       of the multiplication (same length as lhs)
-void solution(const std::vector<std::array<unsigned, 2>> &topo,
-              unsigned n_nodes, const double *x, const double *y,
-              const double *lhs, double *rhs);
+void solution(std::vector<std::array<unsigned, 2>> const& topo, unsigned n_nodes, double const* x, double const* y, double const* lhs, double* rhs);

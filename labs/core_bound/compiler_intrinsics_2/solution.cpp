@@ -12,14 +12,16 @@ if (s == '\n') {
 } else {
   curLineLength++;
 }*/
-unsigned solution(const std::string &inputContents) {
-  unsigned longestLine = 0;
-  unsigned curLineLength = 0;
+unsigned solution(std::string const& inputContents)
+{
+    unsigned longestLine = 0;
+    unsigned curLineLength = 0;
 
-  for (auto s : inputContents) {
-    curLineLength = (s == '\n') ? 0 : curLineLength + 1;
-    longestLine = std::max(curLineLength, longestLine);
-  }
+    for (auto s : inputContents)
+    {
+        curLineLength = (s == '\n') ? 0 : curLineLength + 1;
+        longestLine = std::max(curLineLength, longestLine);
+    }
 
-  return longestLine;
+    return longestLine;
 }

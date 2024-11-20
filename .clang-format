@@ -25,7 +25,7 @@ BitFieldColonSpacing: Both
 BreakAfterAttributes: Never
 BreakArrays: false
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Allman
 BreakBeforeConceptDeclarations: Allowed
 BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true

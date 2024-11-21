@@ -2,7 +2,7 @@
 #include "solution.hpp"
 #include <iostream>
 
-uint16_t original_checksum(Blob const& blob)
+uint16_t original_checksum(blob const& blob)
 {
     uint16_t acc = 0;
     for (auto value : blob)
@@ -16,7 +16,7 @@ uint16_t original_checksum(Blob const& blob)
 int main()
 {
     // Init benchmark data
-    Blob blob;
+    blob blob;
     init(blob);
 
     auto original_result = original_checksum(blob);

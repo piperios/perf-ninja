@@ -2,7 +2,7 @@
 #include <limits>
 #include <random>
 
-void init(Blob& blob)
+void init(blob& blob)
 {
     std::random_device r;
     std::default_random_engine generator(r());

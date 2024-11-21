@@ -5,7 +5,7 @@
 static void bench1(benchmark::State& state)
 {
     // Init benchmark data
-    Blob blob;
+    blob blob;
     init(blob);
 
     // Run the benchmark

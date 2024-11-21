@@ -1,12 +1,14 @@
 #include "solution.hpp"
 
-uint16_t checksum(Blob const& blob)
+#include <cstdint>
+#include <numeric>
+
+uint16_t checksum(blob const& blob)
 {
-    uint16_t acc = 0;
-    for (auto value : blob)
-    {
-        acc += value;
-        acc += acc < value;  // add carry
-    }
+    uint32_t acc = std::accumulate(blob.cbegin(), blob.cend(), 0);
+
+    acc = (acc >> 16) + (acc & 0xFFFF);
+    acc = (acc >> 16) + (acc & 0xFFFF);
+
     return acc;
 }

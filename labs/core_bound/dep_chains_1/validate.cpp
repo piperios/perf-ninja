@@ -3,11 +3,23 @@
 #include <iostream>
 #include <memory>
 
-unsigned original_solution(List* l1, List* l2)
+std::vector<unsigned> vec_from_list(list* l)
+{
+    std::vector<unsigned> ret{};
+    list* h = l;
+    while (h)
+    {
+        ret.push_back(l->value);
+        h = h->next;
+    }
+    return ret;
+}
+
+unsigned original_solution(list* l1, list* l2)
 {
     unsigned retVal = 0;
 
-    List* head2 = l2;
+    list* head2 = l2;
     while (l1)
     {
         unsigned v = l1->value;
@@ -16,7 +28,7 @@ unsigned original_solution(List* l1, List* l2)
         {
             if (l2->value == v)
             {
-                retVal += getSumOfDigits(v);
+                retVal += get_sum_of_digits(v);
                 break;
             }
             l2 = l2->next;
@@ -30,13 +42,16 @@ unsigned original_solution(List* l1, List* l2)
 int main()
 {
     // Init benchmark data
-    auto arena1 = ArenaListAllocator{};
-    auto l1 = getRandomList(arena1);
-    auto arena2 = ArenaListAllocator{};
-    auto l2 = getRandomList(arena2);
+    auto arena1 = list_arena_allocator_t{};
+    auto l1 = get_random_list(arena1);
+    auto arena2 = list_arena_allocator_t{};
+    auto l2 = get_random_list(arena2);
+
+    auto v1 = vec_from_list(l1);
+    auto v2 = vec_from_list(l2);
 
     auto original_result = original_solution(l1, l2);
-    auto result = solution(l1, l2);
+    auto result = solution(v1, v2);
 
     if (original_result != result)
     {

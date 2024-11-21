@@ -6,15 +6,13 @@
 static void bench1(benchmark::State& state)
 {
     // Init benchmark data
-    auto arena1 = ArenaListAllocator{};
-    auto l1 = getRandomList(arena1);
-    auto arena2 = ArenaListAllocator{};
-    auto l2 = getRandomList(arena2);
+    auto v1 = get_random_vector();
+    auto v2 = get_random_vector();
 
     // Run the benchmark
     for (auto _ : state)
     {
-        auto output = solution(l1, l2);
+        auto output = solution(v1, v2);
         benchmark::DoNotOptimize(output);
     }
 }

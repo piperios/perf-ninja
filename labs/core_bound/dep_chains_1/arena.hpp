@@ -4,27 +4,27 @@
 // T - type of objects.
 // N - size in bytes.
 // Allocate objects of T consecutively.
-template<class T, size_t N> class Arena
+template<class T, size_t N> class arena
 {
 public:
-    Arena() : curPtr(arena) {}
+    arena() : _curr_ptr(_arena) {}
 
-    Arena(Arena const&) = delete;
-    Arena& operator=(Arena const&) = delete;
+    arena(arena const&) = delete;
+    arena& operator=(arena const&) = delete;
 
     T* allocate()
     {
-        auto endPtr = arena + N;
-        if (endPtr - curPtr < sizeof(T)) return nullptr;
+        auto end_ptr = _arena + N;
+        if (end_ptr - _curr_ptr < sizeof(T)) return nullptr;
 
-        T* savePtr = (T*)curPtr;
-        curPtr += sizeof(T);
-        return savePtr;
+        T* save_ptr = (T*)_curr_ptr;
+        _curr_ptr += sizeof(T);
+        return save_ptr;
     }
 
     // no dealloc method - rely on RAII to dealloc arena
 
 private:
-    alignas(128) std::byte arena[N];
-    std::byte* curPtr = nullptr;
+    alignas(128) std::byte _arena[N];
+    std::byte* _curr_ptr = nullptr;
 };

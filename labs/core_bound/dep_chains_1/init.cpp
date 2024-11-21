@@ -4,11 +4,11 @@
 #include <limits>
 #include <random>
 
-std::vector<unsigned> getRandomVector()
+std::vector<unsigned> get_random_vector()
 {
     std::random_device r;
     std::default_random_engine generator(r());
-    std::uniform_int_distribution<unsigned> distribution(0, std::numeric_limits<RandomRangeT>::max());
+    std::uniform_int_distribution<unsigned> distribution(0, std::numeric_limits<random_range_t>::max());
 
     std::vector<unsigned> retVector;
     retVector.reserve(N);
@@ -23,22 +23,22 @@ std::vector<unsigned> getRandomVector()
     return retVector;
 }
 
-List* getRandomList(ArenaListAllocator& allocator)
+list* get_random_list(list_arena_allocator_t& allocator)
 {
     auto createNode = [&](unsigned v)
     {
-        List* n = allocator.allocate();
+        list* n = allocator.allocate();
         if (!n) return n;  // consider crash
         n->value = v;
         n->next = nullptr;
         return n;
     };
 
-    List* head = createNode(0);
+    list* head = createNode(0);
     if (!head) return nullptr;
 
-    List* l = head;
-    std::vector<unsigned> randoms = getRandomVector();
+    list* l = head;
+    std::vector<unsigned> randoms = get_random_vector();
     for (auto v : randoms)
     {
         l->next = createNode(v);
@@ -49,7 +49,7 @@ List* getRandomList(ArenaListAllocator& allocator)
 }
 
 // For debugging
-void printList(List* l)
+void print_list(list* l)
 {
     while (l)
     {

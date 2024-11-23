@@ -5,8 +5,9 @@
 static void bench1(benchmark::State& state)
 {
     // Init benchmark data
-    std::vector<Life::Grid> grids;
-    for (int i = 0; i < NumberOfGrids; i++) grids.emplace_back(initRandom());
+    std::vector<life::grid> grids;
+    grids.reserve(number_of_grids_v);
+    for (int i = 0; i < number_of_grids_v; i++) grids.emplace_back(init_rand());
 
     // Run the benchmark
     for (auto _ : state)

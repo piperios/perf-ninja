@@ -2,69 +2,69 @@
 #include "solution.hpp"
 #include <iostream>
 
-class LifeOriginal
+class life_original
 {
 
 public:
-    using Grid = std::vector<std::vector<int>>;
+    using grid = std::vector<std::vector<int>>;
 
 private:
-    Grid current;
-    Grid future;
+    grid current;
+    grid future;
 
 public:
-    void reset(Grid const& grid) { current = future = grid; }
+    void reset(grid const& grid) { current = future = grid; }
 
-    int getPopulationCount()
+    int population_count()
     {
-        int populationCount = 0;
+        int pop_count = 0;
         for (auto& row : current)
-            for (auto& item : row) populationCount += item;
-        return populationCount;
+            for (auto& item : row) pop_count += item;
+        return pop_count;
     }
 
-    void printCurrentGrid()
+    void print_curr_grid() const
     {
-        for (auto& row : current)
+        for (auto const& row : current)
         {
-            for (auto& item : row) item ? std::cout << "x " : std::cout << ". ";
+            for (auto const& item : row) item ? std::cout << "x " : std::cout << ". ";
             std::cout << "\n";
         }
         std::cout << "\n";
     }
 
     // Simulate the next generation of life
-    void simulateNext()
+    void next_sim()
     {
         //printCurrentGrid();
-        int M = current.size();
-        int N = current[0].size();
+        auto const M = current.size();
+        auto const N = current[0].size();
 
         // Loop through every cell
         for (int i = 0; i < M; i++)
         {
             for (int j = 0; j < N; j++)
             {
-                int aliveNeighbours = 0;
+                int alive_neighbors = 0;
                 // finding the number of neighbours that are alive
                 for (int p = -1; p <= 1; p++)
                 {  // row-offet (-1,0,1)
                     for (int q = -1; q <= 1; q++)
-                    {                           // col-offset (-1,0,1)
-                        if ((i + p < 0) ||      // if row offset less than UPPER boundary
-                            (i + p > M - 1) ||  // if row offset more than LOWER boundary
-                            (j + q < 0) ||      // if column offset less than LEFT boundary
-                            (j + q > N - 1))    // if column offset more than RIGHT boundary
+                    {                            // col-offset (-1,0,1)
+                        if ((i + p < 0 ||        // if row offset less than UPPER boundary
+                             (i + p > M - 1) ||  // if row offset more than LOWER boundary
+                             (j + q < 0) ||      // if column offset less than LEFT boundary
+                             (j + q > N - 1)))   // if column offset more than RIGHT boundary
                             continue;
-                        aliveNeighbours += current[i + p][j + q];
+                        alive_neighbors += current[i + p][j + q];
                     }
                 }
                 // The cell needs to be subtracted from
                 // its neighbours as it was counted before
-                aliveNeighbours -= current[i][j];
+                alive_neighbors -= current[i][j];
 
                 // Implementing the Rules of Life:
-                switch (aliveNeighbours)
+                switch (alive_neighbors)
                 {
                 // 1. Cell is lonely and dies
                 case 0:
@@ -82,27 +82,28 @@ public:
     }
 };
 
-std::vector<int> original_solution(std::vector<LifeOriginal::Grid> const& grids)
+std::vector<int> original_solution(std::vector<life_original::grid> const& grids)
 {
-    std::vector<int> popCounts;
-    popCounts.reserve(grids.size());
+    std::vector<int> pop_counts;
+    pop_counts.reserve(grids.size());
 
-    LifeOriginal life;
-    for (auto& grid : grids)
+    life_original life;
+    for (auto const& grid : grids)
     {
         life.reset(grid);
-        for (int i = 0; i < NumberOfSims; i++) life.simulateNext();
-        popCounts.push_back(life.getPopulationCount());
+        for (int i = 0; i < sim_count_v; i++) life.next_sim();
+        pop_counts.push_back(life.population_count());
     }
 
-    return popCounts;
+    return pop_counts;
 }
 
 int main()
 {
     // Init benchmark data
-    std::vector<LifeOriginal::Grid> grids;
-    for (int i = 0; i < NumberOfGrids; i++) grids.emplace_back(initRandom());
+    std::vector<life_original::grid> grids;
+    grids.reserve(number_of_grids_v);
+    for (int i = 0; i < number_of_grids_v; i++) grids.emplace_back(init_rand());
 
     auto original_result = original_solution(grids);
     auto result = solution(grids);

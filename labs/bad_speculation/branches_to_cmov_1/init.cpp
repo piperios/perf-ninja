@@ -3,26 +3,28 @@
 #include <random>
 
 // Init random starting grid of the game
-Life::Grid initRandom()
+life::grid init_rand()
 {
     std::random_device r;
     std::mt19937_64 random_engine(r());
     std::uniform_int_distribution<int> distrib(0, 9);
 
-    Life::Grid retGrid;
-    retGrid.resize(GridXDimension);
+    life::grid ret_grid;
 
-    for (auto& row : retGrid)
+    ret_grid.resize(grid_x_dimension_v);
+    for (auto& row : ret_grid)
     {
-        row.resize(GridYDimension);
+        row.resize(grid_y_dimension_v + 2);
         std::generate(row.begin(),
                       row.end(),
-                      [&]()
-                      {
-                          // 70% dead cells and 30% alive cells
-                          return distrib(random_engine) > 6;
-                      });
+                      // 70% dead cells and 30% alive cells
+                      [&]() { return distrib(random_engine) > 6; });
+
+        row.front() = row.back() = 0;
     }
 
-    return retGrid;
+    ret_grid.insert(ret_grid.begin(), std::vector(grid_y_dimension_v + 2, 0));
+    ret_grid.emplace_back(std::vector(grid_y_dimension_v + 2, 0));
+
+    return ret_grid;
 }

@@ -1,19 +1,17 @@
 #include "solution.hpp"
 
-// Simulates N steps of the game for each starting grid
-// and return population count
-std::vector<int> solution(std::vector<Life::Grid> const& grids)
+// Simulates N steps of the game for each starting grid and return population count
+std::vector<int> solution(std::vector<life::grid> const& grids)
 {
-    std::vector<int> popCounts;
-    popCounts.reserve(grids.size());
-
-    Life life;
-    for (auto& grid : grids)
+    std::vector<int> pop_counts;
+    pop_counts.reserve(grids.size());
+    life life;
+    for (auto const& grid : grids)
     {
         life.reset(grid);
-        for (int i = 0; i < NumberOfSims; i++) life.simulateNext();
-        popCounts.push_back(life.getPopulationCount());
+        for (int i = 0; i < sim_count_v; i++) life.next_sim();
+        pop_counts.push_back(life.population_count());
     }
 
-    return popCounts;
+    return pop_counts;
 }

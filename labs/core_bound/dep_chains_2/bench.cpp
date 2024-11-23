@@ -5,12 +5,12 @@
 static void bench1(benchmark::State& state)
 {
     // Init benchmark data
-    auto particles = initParticles();
+    auto particles = init_particles();
 
     // Run the benchmark
     for (auto _ : state)
     {
-        randomParticleMotion<XorShift32>(particles, STEPS);
+        random_particle_motion<xor_shift32>(particles, steps_v);
         benchmark::DoNotOptimize(particles);
     }
 }

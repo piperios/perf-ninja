@@ -1,75 +1,82 @@
+#pragma once
+
 #include <array>
+#include <cmath>
 #include <cstdint>
-#include <iostream>
-#include <vector>
 
 // The number of motion simulation steps.
-constexpr uint32_t STEPS = 10000;
+constexpr uint32_t steps_v = 10000;
 // The number of paticles to simulate.
-constexpr uint32_t PARTICLES = 1000;
+constexpr uint32_t particles_v = 1000;
 
-struct Particle
+struct particle
 {
     float x;
     float y;
     float velocity;
 };
 
+using particle_buffer_t = std::array<particle, particles_v>;
+
 // Initialize the particles with random coordinates and velocities.
-std::vector<Particle> initParticles();
+particle_buffer_t init_particles();
 
 // Medium-quality random number generator.
 // https://www.javamex.com/tutorials/random_numbers/xorshift.shtml
-struct XorShift32
+struct xor_shift32
 {
     uint32_t val;
 
-    XorShift32(uint32_t seed) : val(seed) {}
+    explicit constexpr xor_shift32(uint32_t seed) : val(seed) {}
 
-public:
     uint32_t gen()
     {
         val ^= (val << 13);
-        val ^= (val >> 17);
-        val ^= (val << 5);
+        // val ^= (val >> 17);
+        // val ^= (val << 5);
         return val;
     }
 };
 
-constexpr double PI_D = 3.141592653589793238463;
-constexpr float PI_F = 3.14159265358979f;
+constexpr double pi_d = 3.141592653589793238463;
+constexpr float pi_f = 3.14159265358979F;
 
 // Approximate sine and cosine functions
 // https://stackoverflow.com/questions/18662261/fastest-implementation-of-sine-cosine-and-square-root-in-c-doesnt-need-to-b
-static float sine(float x)
+constexpr float sine(float x)
 {
-    float const B = 4 / PI_F;
-    float const C = -4 / (PI_F * PI_F);
-    return B * x + C * x * std::abs(x);
+    constexpr float B = 4 / pi_f;
+    constexpr float C = -4 / (pi_f * pi_f);
+
+    return (B * x) + (C * x * std::abs(x));
 }
 
-static float cosine(float x)
+constexpr float cosine(float x)
 {
-    return sine(x + (PI_F / 2));
+    constexpr auto half_pi = pi_f / 2;
+    return sine(x + half_pi);
 }
 
 // A constant to convert from degrees to radians.
 // It maps the random number from [0;UINT32_MAX) to [0;2*pi).
 // We do calculations in double precision then convert to float.
-constexpr float DEGREE_TO_RADIAN = (2 * PI_D) / UINT32_MAX;
+constexpr float degree_to_radian_v = (2 * pi_d) / UINT32_MAX;
 
 // Simulate the motion of the particles.
-// For every particle, we generate a random angle and move the particle
-// in the corresponding direction.
-template<class RNG> void randomParticleMotion(std::vector<Particle>& particles, uint32_t seed)
+// For every particle, we generate a random angle and move the particle in the corresponding direction.
+template <class Rng> void random_particle_motion(particle_buffer_t& particles, uint32_t seed)
 {
-    RNG rng(seed);
-    for (int i = 0; i < STEPS; i++)
+    Rng rng(seed);
+    for (int i = 0; i < steps_v; ++i)
+    {
         for (auto& p : particles)
         {
-            uint32_t angle = rng.gen();
-            float angle_rad = angle * DEGREE_TO_RADIAN;
-            p.x += cosine(angle_rad) * p.velocity;
-            p.y += sine(angle_rad) * p.velocity;
+            auto const angle_rad = rng.gen() * degree_to_radian_v;
+            auto const sin = sine(angle_rad);
+            auto const cos = cosine(angle_rad);
+
+            p.y += sin * p.velocity;
+            p.x += cos * p.velocity;
         }
+    }
 }

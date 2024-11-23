@@ -4,9 +4,9 @@
 #include <limits>
 #include <random>
 
-static bool equals(std::vector<Particle> const& p1, std::vector<Particle> const& p2)
+static bool equals(particle_buffer_t const& p1, particle_buffer_t const& p2)
 {
-    constexpr int maxErrors = 10;
+    constexpr int max_errs = 10;
     float const epsilon = std::sqrt(std::numeric_limits<float>::epsilon());
     int errors = 0;
 
@@ -22,7 +22,7 @@ static bool equals(std::vector<Particle> const& p1, std::vector<Particle> const&
         {
             std::cerr << "Result: p1[" << i << "] = {" << x1 << "," << y1 << "}"
                       << ". Expected : p1[" << i << "] = {" << x2 << "," << y2 << "}" << std::endl;
-            if (++errors >= maxErrors) return false;
+            if (++errors >= max_errs) return false;
         }
     }
     return 0 == errors;
@@ -30,26 +30,25 @@ static bool equals(std::vector<Particle> const& p1, std::vector<Particle> const&
 
 // For validation we use a deterministic random number generator
 // that uses a global state and thus always generates the same sequence of numbers
-struct rngForValidation
+struct rng_for_validation
 {
-    rngForValidation(uint32_t seed) { (void)seed; }
+    rng_for_validation(uint32_t seed) { (void)seed; }
 
-public:
     static uint32_t val;
 
     uint32_t gen() { return val++; }
 };
 
-uint32_t rngForValidation::val = 0;
+uint32_t rng_for_validation::val = 0;
 
-void randomParticleMotionOriginal(std::vector<Particle>& particles, uint32_t seed)
+void random_particle_motion_original(particle_buffer_t& particles, uint32_t seed)
 {
-    rngForValidation rng(seed);
-    for (int i = 0; i < STEPS; i++)
+    rng_for_validation rng(seed);
+    for (int i = 0; i < steps_v; i++)
         for (auto& p : particles)
         {
             uint32_t angle = rng.gen();
-            float angle_rad = angle * DEGREE_TO_RADIAN;
+            float angle_rad = angle * degree_to_radian_v;
             p.x += cosine(angle_rad) * p.velocity;
             p.y += sine(angle_rad) * p.velocity;
         }
@@ -58,7 +57,7 @@ void randomParticleMotionOriginal(std::vector<Particle>& particles, uint32_t see
 int main()
 {
     // Init benchmark data
-    auto particles = initParticles();
+    auto particles = init_particles();
     auto particlesCopy = particles;
 
     std::random_device r;
@@ -66,9 +65,9 @@ int main()
     std::uniform_int_distribution<uint32_t> distrib(0, std::numeric_limits<uint32_t>::max());
 
     auto seed = distrib(random_engine);
-    randomParticleMotionOriginal(particlesCopy, seed);
-    rngForValidation::val = 0;
-    randomParticleMotion<rngForValidation>(particles, seed);
+    random_particle_motion_original(particlesCopy, seed);
+    rng_for_validation::val = 0;
+    random_particle_motion<rng_for_validation>(particles, seed);
 
     if (!equals(particlesCopy, particles))
     {
